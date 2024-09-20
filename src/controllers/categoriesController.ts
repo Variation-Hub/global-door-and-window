@@ -8,8 +8,11 @@ class CategoriesController {
         try {
             const { name, subCategory, list } = req.body;
             const categories = await Categories.findOne({ name, subCategory });
-            if(categories){
-                return res.status(409).json({ message: 'Category already exists' });
+            if (categories) {
+                return res.status(409).json({
+                    message: 'Categorie already exists',
+                    status: false
+                });
             }
 
             const newCategory = new Categories({
@@ -20,9 +23,17 @@ class CategoriesController {
 
             await newCategory.save();
 
-            res.status(201).json(newCategory);
+            res.status(201).json({
+                message: "Categorie created successfully",
+                status: true,
+                data: newCategory
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 
@@ -30,9 +41,18 @@ class CategoriesController {
     public async fetchCategories(req: Request, res: Response) {
         try {
             const categories = await Categories.find();
-            res.status(200).json(categories);
+            res.status(200).json({
+                message: "Categories fetch successfully",
+                status: true,
+                data: categories
+            });
+
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 
@@ -42,12 +62,23 @@ class CategoriesController {
             const { name, subCategory } = req.params;
             const categories = await Categories.findOne({ name, subCategory });
             if (!categories) {
-                return res.status(404).json({ message: 'No categories found for the given subCategory' });
+                return res.status(404).json({
+                    message: 'No categories found for the given subCategory',
+                    status: false
+                });
             }
 
-            res.status(200).json(categories);
+            res.status(200).json({
+                message: "Categories fetch successfully",
+                status: true,
+                data: categories
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 
@@ -63,12 +94,23 @@ class CategoriesController {
             );
 
             if (!updatedCategory) {
-                return res.status(404).json({ message: 'No category found for the given subCategory' });
+                return res.status(404).json({
+                    message: 'No category found for the given subCategory',
+                    status: false
+                });
             }
 
-            res.status(200).json(updatedCategory);
+            res.status(200).json({
+                message: "Categorie updated successfully",
+                status: true,
+                data: updatedCategory
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 
@@ -80,12 +122,22 @@ class CategoriesController {
             const deletedCategory = await Categories.findOneAndDelete({ name, subCategory });
 
             if (!deletedCategory) {
-                return res.status(404).json({ message: 'No category found for the given subCategory' });
+                return res.status(404).json({
+                    message: 'No category found for the given subCategory',
+                    status: false
+                });
             }
 
-            res.status(200).json({ message: 'Category deleted successfully' });
+            res.status(200).json({
+                message: 'Category deleted successfully',
+                status: true
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 }

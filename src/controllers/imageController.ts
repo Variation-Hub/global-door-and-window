@@ -11,10 +11,17 @@ class ImageController {
             if (fs.existsSync(filePath)) {
                 res.sendFile(filePath);
             } else {
-                res.status(404).json({ message: 'Image not found' });
+                res.status(404).json({
+                    message: 'Image not found',
+                    status: false
+                });
             }
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 }

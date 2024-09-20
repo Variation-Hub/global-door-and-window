@@ -11,9 +11,17 @@ class ContactController {
 
             await contactDetails.save();
 
-            res.status(201).json(contactDetails);
+            res.status(201).json({
+                message: "Contact create successfully",
+                status: true,
+                data: contactDetails
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 
@@ -24,7 +32,10 @@ class ContactController {
 
             const contactDetails = await ContactModel.find().skip(skip).limit(limit);
             res.status(200).json({
-                contactDetails, meta_data: {
+                message: "Contact fetch successfully",
+                status: true,
+                data: contactDetails,
+                meta_data: {
                     page,
                     items: totalCount,
                     page_size: limit,
@@ -32,7 +43,11 @@ class ContactController {
                 }
             });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     };
 }

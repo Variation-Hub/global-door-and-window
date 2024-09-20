@@ -14,7 +14,10 @@ class ItemsController {
 
             const items = await Item.find().skip(skip).limit(limit);
             res.status(200).json({
-                items, meta_data: {
+                message: "Items fetch succesfully",
+                status: true,
+                data: items,
+                meta_data: {
                     page,
                     items: totalCount,
                     page_size: limit,
@@ -22,7 +25,11 @@ class ItemsController {
                 }
             });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 
@@ -31,11 +38,22 @@ class ItemsController {
             const { id } = req.params;
             const item = await Item.findById(id);
             if (!item) {
-                return res.status(404).json({ message: 'Item not found' });
+                return res.status(404).json({
+                    message: 'Item not found',
+                    status: false
+                });
             }
-            res.status(200).json(item);
+            res.status(200).json({
+                message: "Item fetch successfully",
+                status: true,
+                data: item
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 
@@ -43,13 +61,24 @@ class ItemsController {
         try {
             const { category, subCategory } = req.params;
 
-            const item = await Item.find({ category, subCategory})
+            const item = await Item.find({ category, subCategory })
             if (!item) {
-                return res.status(404).json({ message: 'Item not found' });
+                return res.status(404).json({
+                    message: 'Item not found',
+                    status: false
+                });
             }
-            res.status(200).json(item);
+            res.status(200).json({
+                message: "Items fetch succesfully",
+                status: true,
+                data: item
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 
@@ -65,7 +94,10 @@ class ItemsController {
             });
 
             if (!validCategory) {
-                return res.status(400).json({ message: 'Invalid category or type' });
+                return res.status(400).json({
+                    message: 'Invalid category or type',
+                    status: false
+                });
             }
 
             const newItem = new Item({
@@ -73,9 +105,17 @@ class ItemsController {
             });
 
             await newItem.save();
-            res.status(201).json(newItem);
+            res.status(201).json({
+                message: "Item create successfully",
+                status: true,
+                data: newItem
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 
@@ -91,7 +131,10 @@ class ItemsController {
             });
 
             if (!validCategory) {
-                return res.status(400).json({ message: 'Invalid category or type' });
+                return res.status(400).json({
+                    message: 'Invalid category or type',
+                    status: false
+                });
             }
 
             const updatedItem = await Item.findByIdAndUpdate(
@@ -101,12 +144,23 @@ class ItemsController {
             );
 
             if (!updatedItem) {
-                return res.status(404).json({ message: 'Item not found' });
+                return res.status(404).json({
+                    message: 'Item not found',
+                    status: false
+                });
             }
 
-            res.status(200).json(updatedItem);
+            res.status(200).json({
+                message: "Item update successfully",
+                status: true,
+                data: updatedItem
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 
@@ -116,7 +170,10 @@ class ItemsController {
 
             const item = await Item.findByIdAndDelete(id);
             if (!item) {
-                return res.status(404).json({ message: 'Item not found' });
+                return res.status(404).json({
+                    message: 'Item not found',
+                    status: false
+                });
             }
 
             item.images.forEach((image) => {
@@ -126,9 +183,16 @@ class ItemsController {
                 }
             });
 
-            res.status(200).json({ message: 'Item deleted successfully' });
+            res.status(200).json({
+                message: 'Item deleted successfully',
+                status: true
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({
+                message: 'Server error',
+                status: false,
+                error
+            });
         }
     }
 }
