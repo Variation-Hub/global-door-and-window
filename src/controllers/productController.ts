@@ -59,9 +59,15 @@ class ItemsController {
 
     public async showItemByType(req: any, res: Response) {
         try {
-            const { category, subCategory } = req.params;
+            const { category } = req.params;
+            const { subCategory } = req.query
 
-            const item = await Item.find({ category, subCategory })
+            let query: any = { category }
+
+            if (subCategory) {
+                query.subCategory = subCategory
+            }
+            const item = await Item.find(query)
             if (!item) {
                 return res.status(404).json({
                     message: 'Item not found',
