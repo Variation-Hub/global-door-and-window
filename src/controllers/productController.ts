@@ -59,6 +59,7 @@ class ItemsController {
 
     public async showItemByType(req: any, res: Response) {
         try {
+            const { page, limit, skip } = req.pagination!;
             const { category } = req.params;
             const { subCategory } = req.query
 
@@ -67,8 +68,9 @@ class ItemsController {
             if (subCategory) {
                 query.subCategory = subCategory
             }
-            const item = await Item.find(query)
-            if (!item) {
+            const items = await Item.find(query).skip(skip).limit(limit)
+            const totalCount = await Item.find(query).countDocuments();
+            if (!items) {
                 return res.status(404).json({
                     message: 'Item not found',
                     status: false
@@ -77,7 +79,13 @@ class ItemsController {
             res.status(200).json({
                 message: "Items fetch succesfully",
                 status: true,
-                data: item
+                data: items,
+                meta_data: {
+                    page,
+                    items: totalCount,
+                    page_size: limit,
+                    pages: Math.ceil(totalCount / limit)
+                }
             });
         } catch (error) {
             res.status(500).json({
